@@ -15,7 +15,7 @@ class InferBERT(nn.Module):
         self.output_layer = nn.Linear(self.hidden_size, self.output_dim)
         self.sigmoid = nn.Sigmoid()
     
-    #@autocast() # run mixed precision
+    @autocast() # run mixed precision
     def forward(self, input_ids, attention_mask, token_type_ids):
         """
         Might be worthwhile to concatenate several last hidden states (https://github.com/huggingface/transformers/issues/1328) --> Experiment with this!
@@ -23,6 +23,8 @@ class InferBERT(nn.Module):
         cls_reps = self.base(input_ids, attention_mask, token_type_ids)[1] # run ALBERT forward pass
         logits = self.output_layer(self.dropout(cls_reps)) # classification layer
         probs = self.sigmoid(logits) # get probabilities from logits
+        # probs = self.sigmoid(torch.tensor(logits[0].item(), 1-logits[0].item()))
+        [9]
         return {'logits' : logits,
                 'probs' : probs}
     

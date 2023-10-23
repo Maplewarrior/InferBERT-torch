@@ -11,7 +11,7 @@ class ADRDataset(Dataset):
         self.tokenizer = AlbertTokenizer.from_pretrained(CFG['model']['model_version'])
 
     def __getitem__(self, idx):
-        input = self.df.loc[idx, 'sentence'] #+ ' <MASK>'
+        input = self.df.loc[idx, 'sentence']
         label = self.df.loc[idx, 'label']
         # tokenize data
         inputs = self.tokenizer(input,

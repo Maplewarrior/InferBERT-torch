@@ -18,8 +18,8 @@ training:
   shuffle: True
   start_epoch: 0
   num_workers: 8
-  mini_batch_size: 64
-  accum_iters: 2 # gradients are accumulated for mini_batch_size * accum_iters before stepping with the optimizer
+  mini_batch_size: 128
+  accum_iters: 1 # gradients are accumulated for mini_batch_size * accum_iters before stepping with the optimizer
   use_optimizer: Adam
   print_freq: 75 # print log every x steps
   total_steps: 10000
@@ -59,7 +59,7 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: experiments/reproduction/outputs/liverfailure/model_weights.pt # leave blank if training is from scratch
+  pretrained_ckpt: # leave blank if training is from scratch
   hidden_size: 768 # changes depending on model_version!
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
   dropout_prob: 0.2

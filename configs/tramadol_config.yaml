@@ -1,0 +1,65 @@
+data:
+  train_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/train.csv
+  val_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/dev.csv
+  test_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/test.csv
+  feature_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/feature.csv
+  all_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/all.csv
+  max_seq_len: 128
+  is_lowercase: False # albert-base-v2 is uncased
+  pos_weight: 1 # Vector with dimension equal to n_classes that accounts for class imbalances --> vector containing (n_negative / n_positive)
+
+training:
+  overwrite: True
+  out_dir: experiments/reproduction/outputs/liverfailure
+  model_path: experiments/reproduction/outputs/liverfailure/model_weights.pt
+  train_results_path: experiments/reproduction/outputs/liverfailure/logs/train_log.json
+  val_results_path: experiments/reproduction/outputs/liverfailure/logs/val_log.json
+  test_results_path: experiments/reproduction/outputs/liverfailure/logs/test_log.json
+  shuffle: True
+  start_epoch: 0
+  num_workers: 8
+  mini_batch_size: 128
+  accum_iters: 1 # gradients are accumulated for mini_batch_size * accum_iters before stepping with the optimizer
+  use_optimizer: Adam
+  print_freq: 75 # print log every x steps
+  total_steps: 10000
+  warmup_steps: 2000
+
+  optimization:
+    Adam:
+      name: Adam
+      lr: 1.0e-5
+      weight_decay: 0.0001
+      epsilon: 1.0e-6
+      betas:
+      - 0.9
+      - 0.999 #0.998
+
+    LAMB: 
+      name: LAMB
+      lr: 0.00176
+      weight_decay: 0.0
+      epsilon: 1.0e-6
+      betas:
+      - 0.9
+      - 0.999
+  validation:
+    batch_size: 1
+    shuffle: False
+causal_inference:
+  prediction:
+    batch_size: 32
+    num_workers: 4
+    input_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/all.csv
+    output_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
+  analysis:
+    probability_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
+    feature_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/feature.csv
+    output_dir: experiments/reproduction/outputs/liverfailure/causality_output
+
+model:
+  model_version: albert-base-v2
+  pretrained_ckpt: # leave blank if training is from scratch
+  hidden_size: 768 # changes depending on model_version!
+  n_classes: 1 # positive/negative but dim 1 is needed for the loss function
+  dropout_prob: 0.2

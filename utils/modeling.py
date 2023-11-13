@@ -65,4 +65,3 @@ def get_loss_func(CFG):
     else:
         raise NotImplementedError
     return loss_func
-

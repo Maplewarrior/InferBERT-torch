@@ -12,6 +12,8 @@ This script is taken from the authors of InferBERT
 https://github.com/XingqiaoWang/DeepCausalPV-master/blob/main/src/Analgesics-induced_acute_liver_failure/data_preprocessing.py
 
 The code preprocesses the analgesics-induced acute liver failure dataset and the procdure is outlined in the paper.
+
+Minor modifications have been made such that csv files are used instead of tsv
 """
 def _normalization(dict, index_dict):
     indication_index=index_dict['indication_index']
@@ -264,13 +266,14 @@ def preprocess(dataset_dir, dataset_name, out_dir):
     dict = _normalization(dict, index_dict)
     dict = _dose_unify(dict, index_dict)
     dict = _age_unify(dict, index_dict)
+    print("Unified!")
     _generate_ALBERT_dataset(dict, target_list, out_dir,index_dict)
 
 
 def main():
-    CFG = {'dataset_dir': 'data/reproduction/Analgesics-induced acute liver failure',
+    CFG = {'dataset_dir': '/work3/s204138/InferBERT_data/LiverFailure/',
            'dataset_name': 'dataset.csv',
-           'out_dir': 'data/reproduction/Analgesics-induced acute liver failure/processed/'}
+           'out_dir': '/work3/s204138/InferBERT_data/LiverFailure/processed/'}
     
     preprocess(CFG['dataset_dir'], CFG['dataset_name'], CFG['out_dir'])
 

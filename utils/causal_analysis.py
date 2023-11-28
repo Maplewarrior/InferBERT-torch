@@ -52,7 +52,7 @@ class CausalAnalyser:
                     self.result_dict['sentence'].extend(sentences)
                     self.result_dict['actual_label'].extend([int(e.item()) for e in labels])
                 
-                if max(1, i) % len(self.dataloader_predict.dataset // 20) == 0:
+                if max(1, i) % (len(self.dataloader_predict.dataset) // 20) == 0:
                     print(f'Iter: {i}/{len(self.dataloader_predict.dataset)}')
 
         # save prediction file

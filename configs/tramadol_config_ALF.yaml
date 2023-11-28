@@ -28,7 +28,7 @@ training:
   optimization:
     Adam:
       name: Adam
-      lr: 1.0e-9
+      lr: 1.0e-8
       weight_decay: 0.0001
       epsilon: 1.0e-6
       betas:

@@ -7,17 +7,17 @@ import os
 import sys
 import random
 
-"""
-This script is taken from the authors of InferBERT
-https://github.com/XingqiaoWang/DeepCausalPV-master/blob/main/src/Analgesics-induced_acute_liver_failure/data_preprocessing.py
 
-The code preprocesses the analgesics-induced acute liver failure dataset and the procdure is outlined in the paper.
-
-Minor modifications have been made such that csv files are used instead of tsv
-"""
 def _normalization(dict, index_dict):
     indication_index=index_dict['indication_index']
     dose_index=index_dict['dose_index']
+    outcome_empty_list = []
+    outcome_index=index_dict['outcome_index']
+    for key in dict:
+        if (dict[key][outcome_index] == ' '):
+            outcome_empty_list.append(key)
+    for key in outcome_empty_list:
+        dict.pop(key)
     for key in dict:
         if ' UNK ' in dict[key][indication_index] or 'UNKNOWN' in dict[key][indication_index]:
             dict[key][indication_index] = ' '
@@ -164,11 +164,11 @@ def _generate_ALBERT_dataset(dict, target_list, out_dir, index_dict):
             outcome = case[outcome_index].replace('\n', '')
             if gender != ' ':
                 if age != ' ':
-                    tmp = 'Patient (' + gender + ', ' + age + ' years old)'
+                    tmp = 'Patient (' + gender + ', ' + age + ')'
                 else:
                     tmp = 'Patient (' + gender + ')'
             elif age != ' ':
-                tmp = 'Patient (' + age + ' years old)'
+                tmp = 'Patient (' + age + ')'
             else:
                 tmp = 'Patient '
             part1 = tmp
@@ -180,16 +180,16 @@ def _generate_ALBERT_dataset(dict, target_list, out_dir, index_dict):
                 part3 = ''
             else:
                 part3 = ' to treat ' + indication
-            if outcome == ' ':
+            if ade == ' ':
                 part4 = ''
             else:
-                part4 = ' leading to ' + outcome
+                part4 = ', caused ' + ade
             s = part1 + part2 + part3 + part4 + '.'
             if '00:00:00' in s:
                 continue
             label = ''
             for index, target_term in enumerate(target_list):
-                for term in ade.split(', '):
+                for term in outcome.split(', '):
                     if term == target_term:
                         label = '1'
                         break
@@ -222,14 +222,13 @@ def _generate_ALBERT_dataset(dict, target_list, out_dir, index_dict):
     train = train_dev.sample(frac=0.8)
     dev = train_dev.drop(train.index)
     test = df1.drop(train_dev.index)
-    
+
     # new save logic
     train.to_csv(out_dir + 'train.csv', index=False)
     dev.to_csv(out_dir + 'dev.csv', index=False)
     test.to_csv(out_dir + 'test.csv', index=False)
     df1.to_csv(out_dir + 'all.csv', index=False)
     df2.to_csv(out_dir + 'feature.csv', index=False)
-
 
     # with open(out_dir + '/train.tsv', 'w', newline='') as write_tsv:
     #     write_tsv.write(train.to_csv(sep='\t', index=False))
@@ -248,34 +247,38 @@ def preprocess(dataset_dir, dataset_name, out_dir):
         os.makedirs(out_dir)
     article_read = pd.read_csv(dataset_dir + '/' + dataset_name, delimiter=',')
     dataset = article_read.to_numpy()
-    target_list = ['Hepatic failure and associated disorders', 'Acute hepatic failure',
-                   'Acute on chronic liver failure', 'Chronic hepatic failure', 'Hepatic failure',
-                   'Hepatorenal failure', 'Hepatorenal syndrome', 'Subacute hepatic failure']
+    target_list = ['Death']
     dict = {}
     for case in dataset:
         if str(case[0]) not in dict:
             dict[str(case[0])] = case.copy()
-    index_dict = {'ade_index':6,
-                  'age_index':11,
-                  'dose_index':5,
-                  'gender_index':10,
-                  'indication_index':15,
-                  'outcome_index':7,
+    index_dict = {'ade_index':5,
+                  'age_index':9,
+                  'dose_index':4,
+                  'gender_index':8,
+                  'indication_index':11,
+                  'outcome_index':6,
                   'psd_index':2,
                   'target_index':6}
     dict = _normalization(dict, index_dict)
     dict = _dose_unify(dict, index_dict)
     dict = _age_unify(dict, index_dict)
-    print("Unified!")
     _generate_ALBERT_dataset(dict, target_list, out_dir,index_dict)
 
 
 def main():
-    CFG = {'dataset_dir': '/work3/s204138/InferBERT_data/LiverFailure/',
+    # import pdb
+    # os.listdir('/work3/s204138/InferBERT_data/')
+    # pdb.set_trace()
+    # os.mkdir('/work3/s204138/InferBERT_data/TramadolMortalities/')
+    # os.mkdir('/work3/s204138/InferBERT_data/TramadolMortalities/processed/')
+
+    CFG = {'dataset_dir': '/work3/s204138/InferBERT_data/TramadolMortalities/',
            'dataset_name': 'dataset.csv',
-           'out_dir': '/work3/s204138/InferBERT_data/LiverFailure/processed/'}
+           'out_dir': '/work3/s204138/InferBERT_data/TramadolMortalities/processed/'}
     
     preprocess(CFG['dataset_dir'], CFG['dataset_name'], CFG['out_dir'])
+    
 
 
 if __name__ == "__main__":

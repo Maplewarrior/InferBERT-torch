@@ -88,8 +88,8 @@ class Trainer:
             ########## save model
             if np.mean(val_loss) < best_loss:
                 best_loss = np.mean(val_loss)
-                if os.path.exists(self.CFG['training']['model_path']):
-                    os.remove(self.CFG['training']['model_path']) # remove current model (needed for DDL)
+                # if os.path.exists(self.CFG['training']['model_path']):
+                    # os.remove(self.CFG['training']['model_path']) # remove current model (needed for DDL)
                 torch.save(self.model.state_dict(), self.CFG['training']['model_path']) # save new model
                 print('Model saved to {path}'.format(path=self.CFG['training']['model_path']))
 

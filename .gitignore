@@ -8,9 +8,13 @@ jobscript_*.sh
 
 data/
 data/internal/
+BERTenv/
 virtualenv/
 results/
 experiments/reproduction/outputs/liverfailure/best_weights.pt
+experiments/reproduction/outputs/liverfailure/model_weights.pt
+experiments/reproduction/outputs/liverfailure/model_weights.pt
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

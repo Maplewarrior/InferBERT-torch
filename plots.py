@@ -31,7 +31,7 @@ def visualize_train_val_dynamics(train_result_path='experiments/reproduction/out
     with open(val_result_path, 'r') as f:
         val_res = json.load(f)
     
-    n_epochs = len(train_res['acc'])
+    n_epochs = len(train_res['acc'])-1
     epochs = list(range(1, n_epochs + 1))
 
     if steps_per_epoch:

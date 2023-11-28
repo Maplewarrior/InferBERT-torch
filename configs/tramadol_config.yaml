@@ -1,9 +1,9 @@
 data:
-  train_path: /work3/s204138/InferBERT_data/LiverFailure/processed/train.csv
-  val_path: /work3/s204138/InferBERT_data/LiverFailure/processed/dev.csv
-  test_path: /work3/s204138/InferBERT_data/LiverFailure/processed/test.csv
-  feature_path: /work3/s204138/InferBERT_data/LiverFailure/processed/feature.csv
-  all_path: /work3/s204138/InferBERT_data/LiverFailure/processed/all.csv
+  train_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/train.csv
+  val_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/dev.csv
+  test_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/test.csv
+  feature_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/feature.csv
+  all_path: /work3/s204138/InferBERT_data/TramadolMortalities/processed/all.csv
   max_seq_len: 128
   is_lowercase: False # albert-base-v2 is uncased
   pos_weight: 1 # Vector with dimension equal to n_classes that accounts for class imbalances --> vector containing (n_negative / n_positive)

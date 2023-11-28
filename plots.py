@@ -24,7 +24,8 @@ def visualize_train_val_dynamics(train_result_path='experiments/reproduction/out
                                  out_dir="Train_val_dynamics.png", 
                                  out_file_name="Train_val_dynamics.png",
                                  filetypes = ["png", "pdf"],
-                                 steps_per_epoch=None):
+                                 steps_per_epoch=None,
+                                 plot_title = "Training and Validation loss & acc"):
     with open(train_result_path, 'r') as f:
         train_res = json.load(f)
     
@@ -48,7 +49,7 @@ def visualize_train_val_dynamics(train_result_path='experiments/reproduction/out
     plt.plot(epochs, train_res['acc'], label='Training accuracy')
     plt.plot(epochs, val_res['acc'], label='validation accuracy')
     
-    plt.title('Training and Validation loss & acc')
+    plt.title(plot_title)
     
     #plt.ylabel('Loss')
     plt.legend()
@@ -78,9 +79,11 @@ if __name__ == '__main__':
                                 val_result_path='experiments/reproduction/outputs/liverfailure/logs/val_log.json',
                                 out_dir="plots/liverfailure", 
                                 out_file_name="train_validation_loss_acc.",
-                                steps_per_epoch=184)
+                                steps_per_epoch=184,
+                                plot_title = "Training and Validation loss & accuracy \n (Analgesic-induced Liver Failure)")
     visualize_train_val_dynamics(train_result_path='experiments/reproduction/outputs/tramadol/logs/train_log.json',
                                 val_result_path='experiments/reproduction/outputs/tramadol/logs/val_log.json',
                                 out_dir="plots/tramadol", 
                                 out_file_name="train_validation_loss_acc",
-                                steps_per_epoch=128)
+                                steps_per_epoch=128,
+                                plot_title = "Training and Validation loss & accuracy \n (Tramadol-related mortalities)")

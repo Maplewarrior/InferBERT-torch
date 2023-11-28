@@ -4,6 +4,7 @@
 # HPC outputs
 *.err
 *.out
+jobscript_*.sh
 
 data/
 experiments/

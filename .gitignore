@@ -7,7 +7,6 @@
 jobscript_*.sh
 
 data/
-experiments/
 data/internal/
 virtualenv/
 results/

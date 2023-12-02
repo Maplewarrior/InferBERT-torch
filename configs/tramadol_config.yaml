@@ -59,7 +59,7 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: # leave blank if training is from scratch
+  pretrained_ckpt: experiments/reproduction/outputs/tramadol/model_weights.pt
   hidden_size: 768 # changes depending on model_version!
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
   dropout_prob: 0.2

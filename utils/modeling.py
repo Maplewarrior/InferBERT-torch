@@ -24,7 +24,6 @@ class InferBERT(nn.Module):
         logits = self.output_layer(self.dropout(cls_reps)) # classification layer
         probs = self.sigmoid(logits) # get probabilities from logits
         # probs = self.sigmoid(torch.tensor(logits[0].item(), 1-logits[0].item()))
-        [9]
         return {'logits' : logits,
                 'probs' : probs}
     

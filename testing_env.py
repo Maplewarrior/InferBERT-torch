@@ -7,6 +7,7 @@ from utils.trainer import Trainer
 import pdb
 from torch.utils.data import DataLoader
 import torch
+from utils.calibration_test import CalibrationAnalyser
 
 
 def main():
@@ -41,9 +42,15 @@ def test_dataloader():
     print(f"Decoded input: {decoded_ids}")
     pdb.set_trace()
     
+def run_calibration_test(config_path: str = 'configs/tramadol_config.yaml'):
+    CA = CalibrationAnalyser(config_path)
+    CA.test_calibration(frac_steps=0.05)
 
 
 
 if __name__ == '__main__':
-    main()
+    # run_calibration_test()
+    df = pd.read_csv('experiments/reproduction/outputs/tramadol/calibration_results.csv')
+    print(df)
+    # main()
     # test_dataloader()

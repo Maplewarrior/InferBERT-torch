@@ -30,4 +30,4 @@ def get_calibrated_subset(df, positive_frac=0.1):
             subset_idxs = random.sample(list(neg_samples.index), N_neg_sub) + pos_samples.index.tolist()
         
         # filter input data and return
-        return df.iloc[subset_idxs]
+        return df.iloc[subset_idxs].reset_index(drop=True)

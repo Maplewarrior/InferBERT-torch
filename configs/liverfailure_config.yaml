@@ -24,7 +24,6 @@ training:
   print_freq: 75 # print log every x steps
   total_steps: 10000
   warmup_steps: 2000
-
   optimization:
     Adam:
       name: Adam
@@ -63,7 +62,13 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: # leave blank if training is from scratch
-  hidden_size: 768 # changes depending on model_version!
+  pretrained_ckpt: 'experiments/reproduction/outputs/liverfailure/model_weights.pt' # leave blank if training is from scratch
+  hidden_size: 768 # hidden dimension, default=768 for base-v2
+  intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
+  n_attention_heads: 12
+  n_memory_blocks: 0
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
-  dropout_prob: 0.2
+  fc_dropout_prob: 0.2 # dropout at classification head
+  attention_dropout_prob: 0.2 # dropout at MHA, default=0.0
+  hidden_dropout_prob: 0.2 # dropout at FFN in encoder block, default=0.0
+  

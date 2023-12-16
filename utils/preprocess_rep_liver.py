@@ -25,7 +25,6 @@ def _normalization(dict, index_dict):
             dict[key][dose_index] = ' '
     return dict
 
-
 def _dose_unify(dict, index_dict):
     dose_index = index_dict['dose_index']
     for key in dict:
@@ -230,19 +229,6 @@ def _generate_ALBERT_dataset(dict, target_list, out_dir, index_dict):
     df1.to_csv(out_dir + 'all.csv', index=False)
     df2.to_csv(out_dir + 'feature.csv', index=False)
 
-
-    # with open(out_dir + '/train.tsv', 'w', newline='') as write_tsv:
-    #     write_tsv.write(train.to_csv(sep='\t', index=False))
-    # with open(out_dir + '/dev.tsv', 'w', newline='') as write_tsv:
-    #     write_tsv.write(dev.to_csv(sep='\t', index=False))
-    # with open(out_dir + '/test.tsv', 'w', newline='') as write_tsv:
-    #     write_tsv.write(test.to_csv(sep='\t', index=False))
-    # with open(out_dir + '/all.tsv', 'w', newline='') as write_tsv:
-    #     write_tsv.write(df1.to_csv(sep='\t', index=False))
-    # with open(out_dir + '/feature.tsv', 'w', newline='') as write_tsv:
-    #     write_tsv.write(df2.to_csv(sep='\t', index=False))
-
-
 def preprocess(dataset_dir, dataset_name, out_dir):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -269,14 +255,12 @@ def preprocess(dataset_dir, dataset_name, out_dir):
     print("Unified!")
     _generate_ALBERT_dataset(dict, target_list, out_dir,index_dict)
 
-
 def main():
     CFG = {'dataset_dir': '/work3/s204138/InferBERT_data/LiverFailure/',
            'dataset_name': 'dataset.csv',
            'out_dir': '/work3/s204138/InferBERT_data/LiverFailure/processed/'}
     
     preprocess(CFG['dataset_dir'], CFG['dataset_name'], CFG['out_dir'])
-
 
 if __name__ == "__main__":
     main()

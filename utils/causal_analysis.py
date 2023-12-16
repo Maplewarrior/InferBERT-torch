@@ -76,7 +76,7 @@ class CausalAnalyser:
                 ### log results ###
                 if input_ids.size(0) == 1: # batch_size = 1
                     self.result_dict['mean'].append(means)
-                    self.result_dict['vars'].append(vars)
+                    self.result_dict['var'].append(vars)
                     self.result_dict['sentence'].append(sentences)
                     self.result_dict['actual_label'].append(int(labels.item()))
                 else: # batch_size > 1
@@ -92,7 +92,6 @@ class CausalAnalyser:
         df_prediction = pd.DataFrame.from_dict(self.result_dict)
         df_prediction.to_csv(self.CFG['causal_inference']['prediction']['uncertainty_file_path'])
         print("Saved pred prediction file to {path}!".format(path=self.CFG['causal_inference']['prediction']['uncertainty_file_path']))
-
 
     def run_causal_inference(self):
         # run inference at a root level

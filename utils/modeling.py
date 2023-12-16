@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from transformers import AlbertModel, get_linear_schedule_with_warmup
+from transformers import AlbertModel, AlbertConfig, get_linear_schedule_with_warmup
 from torch.cuda.amp import autocast
 
 class InferBERT(nn.Module):
@@ -10,8 +10,18 @@ class InferBERT(nn.Module):
         self.CFG = CFG
         self.hidden_size = self.CFG['model']['hidden_size']
         self.output_dim = self.CFG['model']['n_classes']
-        self.base = AlbertModel.from_pretrained(self.CFG['model']['model_version'])
-        self.dropout = nn.Dropout(p=self.CFG['model']['dropout_prob'])
+        albert_config = AlbertConfig(hidden_size=768, intermediate_size=3072, hidden_dropout_prob=self.CFG['model']['hidden_dropout_prob'],
+                                     attention_probs_dropout_prob=self.CFG['model']['attention_dropout_prob'])
+        albert_config = AlbertConfig(**{
+                                        "_name_or_path": "albert-base-v2",
+                                        "attention_probs_dropout_prob": self.CFG['model']['attention_dropout_prob'],
+                                        "hidden_dropout_prob": self.CFG['model']['hidden_dropout_prob'],
+                                        "hidden_size": self.CFG['model']['hidden_size'],
+                                        "intermediate_size": self.CFG['model']['intermediate_size'],
+                                        "num_attention_heads": self.CFG['model']['n_attention_heads'],
+                                        "num_memory_blocks": self.CFG['model']['n_memory_blocks']})
+        self.base = AlbertModel.from_pretrained(self.CFG['model']['model_version'], config=albert_config)
+        self.dropout = nn.Dropout(p=self.CFG['model']['fc_dropout_prob'])
         self.output_layer = nn.Linear(self.hidden_size, self.output_dim)
         self.sigmoid = nn.Sigmoid()
     
@@ -43,14 +53,6 @@ class InferBERT(nn.Module):
         vars = torch.var(res, dim=0).tolist()
         return means, vars
     
-
-        
-        
-        
-
-        
-
-    
 def build_model(CFG):
     if CFG['model']['pretrained_ckpt'] is None:
         print(f'Model initialized from scratch')
@@ -63,7 +65,6 @@ def build_model(CFG):
     return model   
 
 def build_optimizer(model, CFG):
-
     if CFG['training']['use_optimizer'] == 'Adam':
         optimizer = optim.AdamW(params=model.parameters(),
                                 lr=CFG['training']['optimization']['Adam']['lr'],
@@ -75,12 +76,10 @@ def build_optimizer(model, CFG):
     
     return optimizer
 
-
 def build_lr_scheduler(CFG, optimizer):
     return get_linear_schedule_with_warmup(optimizer, 
                                            num_warmup_steps=CFG['training']['warmup_steps'],
                                            num_training_steps=CFG['training']['total_steps'])
-
 
 def get_loss_func(CFG):
     if CFG['model']['n_classes'] == 1:

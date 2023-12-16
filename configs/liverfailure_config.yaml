@@ -52,6 +52,10 @@ causal_inference:
     num_workers: 4
     input_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/all.csv
     output_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
+    uncertainty_file_path: experiments/reproduction/outputs/liverfailure/uncertainty_file.csv
+    uncertainty_est:
+      T: 100 # number of samples to draw for each datapoint when estimating mean and var
+
   analysis:
     probability_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
     feature_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/feature.csv

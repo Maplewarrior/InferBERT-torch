@@ -18,7 +18,7 @@ class InferBERT(nn.Module):
     @autocast() # run mixed precision
     def forward(self, input_ids, attention_mask, token_type_ids):
         """
-        Might be worthwhile to concatenate several last hidden states (https://github.com/huggingface/transformers/issues/1328) --> Experiment with this!
+        Might be worthwhile to concatenate several last hidden states (https://github.com/huggingface/transformers/issues/1328) --> Experiment with this?
         """
         cls_reps = self.base(input_ids, attention_mask, token_type_ids)[1] # run ALBERT forward pass
         logits = self.output_layer(self.dropout(cls_reps)) # classification layer
@@ -26,6 +26,30 @@ class InferBERT(nn.Module):
         # probs = self.sigmoid(torch.tensor(logits[0].item(), 1-logits[0].item()))
         return {'logits' : logits,
                 'probs' : probs}
+    
+    @autocast()
+    def uncertainty_est_inference(self, input_ids, attention_mask, token_type_ids):
+        """
+        Run T forward calls with dropout
+        """
+        res = torch.empty(size=(self.CFG['causal_inference']['prediction']['uncertainty_est']['T'], input_ids.size(0))) # T x batch_size
+        for i in range(self.CFG['causal_inference']['prediction']['uncertainty_est']['T']):
+            cls_reps = self.base(input_ids, attention_mask, token_type_ids)[1] # run ALBERT forward pass
+            logits = self.output_layer(self.dropout(cls_reps)) # classification layer
+            probs = self.sigmoid(logits) # get probabilities from logits
+            res[i] = probs
+        
+        means = torch.mean(res, dim=0).tolist()
+        vars = torch.var(res, dim=0).tolist()
+        return means, vars
+    
+
+        
+        
+        
+
+        
+
     
 def build_model(CFG):
     if CFG['model']['pretrained_ckpt'] is None:

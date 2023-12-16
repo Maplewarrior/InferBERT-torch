@@ -49,13 +49,8 @@ def run_calibration_test(config_path: str = 'configs/tramadol_config.yaml'):
 
 
 if __name__ == '__main__':
-    # run_calibration_test()
-    D = {'a': [1, 2],
-         'b': [2, 3],
-         'c': [3, 4]}
-    print(list(D.values()))
-    L = [[1, 2], [2, 3], [2, 4]]
-    print(set(L[0]).intersection(*L[1:]))
+    run_calibration_test()
+    
     # df = pd.read_csv('experiments/reproduction/outputs/tramadol/calibration_results.csv')
     # print(df)
     # main()

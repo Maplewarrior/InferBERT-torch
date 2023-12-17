@@ -32,8 +32,8 @@ This is done by collecting data on drug use and trying to detect potential unwan
 
 Current methods to find statistical associations between drugs and adverse events are mostly based on two-by-two contingency tables and include methods such as proportional reporting ratio (PRR), reporting odds ratio (ROR), and empirical Bayes geometric mean (EBGM). 
 These methods are inherently limited, however, since they cannot account for interactions between features in their predictions. 
-The InferBERT model, proposed in (Wang2021InferBERT:Pharmacovigilance), addresses this shortcoming by pairing a transformer encoder with a post-hoc analysis to assess feature importance tested on two datasets extracted from the FDA Adverse Event Reporting System containing cases of analgesics-induced liver failure and Tramadol fatalities. 
-In this project, we wish to reimplement the methods used in the InferBERT paper using Pytorch and reproduce the results obtained (Wang2021InferBERT:Pharmacovigilance).
+The InferBERT model, proposed in [Wang2021InferBERT:Pharmacovigilance](https://www.frontiersin.org/articles/10.3389/frai.2021.659622/full), addresses this shortcoming by pairing a transformer encoder with a post-hoc analysis to assess feature importance tested on two datasets extracted from the FDA Adverse Event Reporting System containing cases of analgesics-induced liver failure and Tramadol fatalities. 
+In this project, we wish to reimplement the methods used in the InferBERT paper using Pytorch and reproduce the results obtained [Wang2021InferBERT:Pharmacovigilance](https://www.frontiersin.org/articles/10.3389/frai.2021.659622/full).
 
 ## Data
 The data used for the Inferbert paper was pulled from FAERS and can be accessed here: [Analgesics-induced Acute Liver Failure](https://drive.google.com/file/d/1VGGs7uxC4UiOIWFZ2LQ6N2cLweMxOSqi/view?usp=sharing) & [Tramadol-related mortalities](https://drive.google.com/file/d/1VIg5vpQhk2FbAwDBwTzyJ18LyxGZ6VII/view?usp=sharing).

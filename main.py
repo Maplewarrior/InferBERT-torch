@@ -38,11 +38,12 @@ def main():
 
                 # Update config
                 conf = inferbert_trainer.CFG
+                new_out_dir = f"{conf['training']['out_dir']}_{num_exp}"
                 conf["training"]["out_dir"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}"
-                conf["training"]["model_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/model_weights.pt"
-                conf["training"]["train_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/train_log.json"
-                conf["training"]["val_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/val_log.json"
-                conf["training"]["val_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/test_log.json"
+                conf["training"]["model_path"] = f"{new_out_dir}/model_weights.pt"
+                conf["training"]["train_results_path"] = f"{new_out_dir}/logs/train_log.json"
+                conf["training"]["val_results_path"] = f"{new_out_dir}/logs/val_log.json"
+                conf["training"]["val_results_path"] = f"{new_out_dir}/logs/test_log.json"
                 inferbert_trainer.CFG = conf
 
                 print(f"Running experiment {num_exp}/{num_experiments}")

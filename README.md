@@ -1,5 +1,5 @@
 # Inferbert pytorch implementation
-![Static Badge](https://img.shields.io/badge/project-status_done-green)
+![Static Badge](https://img.shields.io/badge/project_status-done-green)
 
 
 This repository was made for the final academic project in [02456 Deep Learning](https://kurser.dtu.dk/course/02456) at the Technical University of Denmark.

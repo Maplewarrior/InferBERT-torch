@@ -62,24 +62,30 @@ Remember to activate your environment.
 python -m pip install -r requirements.txt
 ```
 
-
-
 ### Training
+The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). These can be used by changing the following configs:
 
+```yml
+[...]
+model:
+  model_version: albert-base-v2
+  pretrained_ckpt: 'experiments/reproduction/outputs/liverfailure/model_weights.pt' # <------- leave blank if training is from scratch
+  hidden_size: 768 # hidden dimension, default=768 for base-v2
+  intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
+  n_attention_heads: 12
+  n_memory_blocks: 0
+  n_classes: 1 # positive/negative but dim 1 is needed for the loss function
+  fc_dropout_prob: 0.2 # dropout at classification head
+  attention_dropout_prob: 0.0 # dropout at MHA, default=0.0
+  hidden_dropout_prob: 0.0 # dropout at FFN in encoder block, default=0.0
+```
+
+The pretrained models provided are *no_dropout*, *fc_dropout_02*, *all_dropout_02* for both Analgesics and Tramadol models.
 
 ### Causal Analysis
+
+
 
 ### Robustness Evaluation
 
 
-
-
-
-
-
-
-
-
-
-Link to drive with model weights:
-https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link

@@ -1,4 +1,6 @@
 # Inferbert pytorch implementation
+![Static Badge](https://img.shields.io/badge/project-status_done-green)
+
 
 This repository was made for the final academic project in [02456 Deep Learning](https://kurser.dtu.dk/course/02456) at the Technical University of Denmark.
 
@@ -95,8 +97,11 @@ python utils/trainer.py
 ```
 
 ### Causal Analysis
-
-
+To generate the causal analysis results run the `utils/causal_inference.py` script:
+```bash
+python utils/causal_inference.py
+```
+This will generate two csv files, one for the root effects and one for sub population effects. These are saved to `'experiments/reproduction/outputs/liverfailure/causality_output'` or otherwise stated paths in the `configs/liverfailure_config.yaml` or `configs/tramadol_config.yaml`.
 
 ### Robustness Evaluation
 

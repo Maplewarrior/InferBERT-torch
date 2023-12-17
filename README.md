@@ -19,6 +19,7 @@ Under the supervision of [Jes Frellsen](https://orbit.dtu.dk/en/persons/jes-frel
    * [Preprocessing](#preprocessing)
 - [Reproducing Results](#reproducing-results)
    * [Traning](#training)
+     + [(Optional) Using pretrained weights](#training)
    * [Causal Analysis](#causal-analysis)
    * [Robustness Evaluation](#robustness-evaluation)
 <!-- TOC end -->
@@ -93,7 +94,10 @@ python -m pip install -r requirements.txt
 ```
 
 ### Training
-The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). 
+The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. 
+
+#### (Optional) Using pretrained weights 
+Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). 
 
 These, can be used by changing the following configs:
 

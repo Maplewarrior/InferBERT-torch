@@ -8,7 +8,18 @@ The project was created by:
 - [s204139 August Tollerup](https://github.com/4ug-aug)
 - [s200925 Oliver Elmgreen](https://github.com/FenrisWulven)
 
-Under the supervision of Jes Frellsen.
+Under the supervision of [Jes Frellsen](https://orbit.dtu.dk/en/persons/jes-frellsen).
+
+## Content
+<!-- TOC start  -->
+- [Introduction](#introduction)
+- [Data](#data)
+   * [(Optional)  Using prebuilt models and indices](#optional-using-prebuilt-models-and-indices)
+   * [Placeholder](#running-experiment-on-fiqa-2018-benchmark)
+      + [Smaller Placeholder](#optional-getting-the-data)
+      + [Smaller Placeholder](#running-the-experiment)
+<!-- TOC end -->
+
 
 ## Introduction
 

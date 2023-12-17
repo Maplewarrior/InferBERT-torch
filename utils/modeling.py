@@ -65,10 +65,24 @@ def build_model(CFG):
     return model   
 
 def build_optimizer(model, CFG):
+
+    weight_decay = CFG['training']['optimization']['Adam']['weight_decay']
+
+    # Get named parameters 
+    param_optimizer = list(model.named_parameters())
+    no_decay = ['bias', 'LayerNorm.weight', "LayerNorm", "layer_norm",]  # Add any other patterns you want to exclude from weight decay
+
+    # Exclude parameters from weight decay if they are in no_decay list
+    optimizer_grouped_parameters = [
+        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': weight_decay},
+        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+    ]
+
+    # Initialize optimizer
     if CFG['training']['use_optimizer'] == 'Adam':
-        optimizer = optim.AdamW(params=model.parameters(),
+        optimizer = optim.AdamW(params=optimizer_grouped_parameters,
                                 lr=CFG['training']['optimization']['Adam']['lr'],
-                                weight_decay=CFG['training']['optimization']['Adam']['weight_decay'],
+                                weight_decay=weight_decay,
                                 betas=tuple(CFG['training']['optimization']['Adam']['betas']),
                                 eps=CFG['training']['optimization']['Adam']['epsilon'])
     else:

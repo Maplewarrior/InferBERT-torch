@@ -41,6 +41,34 @@ The data used for the Inferbert paper was pulled from FAERS and can be accessed 
 > [!IMPORTANT]
 > The datasets pulled should be placed in `InferBERT_data/Analgesics-induced_acute_liver_failure/dataset/` and `InferBERT_data/Analgesics-induced_acute_liver_failure/dataset/` for the Analgesics and Tramadol respectively.
 
+The directory structure should look like the following after adding the data:
+
+```bash
+├── .venv
+├── configs
+│   ├── liverfailure_config_ALF.yaml
+│   ├── liverfailure_config.yaml
+│   ├── stats_config.yaml
+│   ├── tramadol_config_ALF.yaml
+│   └── tramadol_config.yaml
+├── InferBERT_data
+│   └── LiverFailure
+│       └── processed
+│       ├── test.csv
+│       ├── all.csv
+│       ├── dev.csv
+│       ├── feature.csv
+│       └── train.csv
+│   └── TramadolMortalities
+│       └── processed
+│       ├── test.csv
+│       ├── all.csv
+│       ├── dev.csv
+│       ├── feature.csv
+│       └── train.csv
+[...]
+```
+
 ### Preprocessing
 To preprocess the data, run the scripts in `utils/preprocessing/` for Analgesics run `preprocess_rep_liver.py` and for Tramadol run `preprocess_tramadol_corrected.py`.
 These scripts will generate preprocessed data located in the directory specified in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`.

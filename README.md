@@ -14,10 +14,11 @@ Under the supervision of [Jes Frellsen](https://orbit.dtu.dk/en/persons/jes-frel
 <!-- TOC start  -->
 - [Introduction](#introduction)
 - [Data](#data)
-   * [(Optional)  Using prebuilt models and indices](#optional-using-prebuilt-models-and-indices)
-   * [Placeholder](#running-experiment-on-fiqa-2018-benchmark)
-      + [Smaller Placeholder](#optional-getting-the-data)
-      + [Smaller Placeholder](#running-the-experiment)
+   * [Preprocessing](#preprocessing)
+- [Reproducing Results](#reproducing-results)
+   * [Traning](#training)
+   * [Causal Analysis](#causal-analysis)
+   * [Robustness Evaluation](#robustness-evaluation)
 <!-- TOC end -->
 
 
@@ -41,6 +42,37 @@ The data used for the Inferbert paper was pulled from FAERS and can be accessed 
 ### Preprocessing
 To preprocess the data, run the scripts in `utils/preprocessing/` for Analgesics run `preprocess_rep_liver.py` and for Tramadol run `preprocess_tramadol_corrected.py`.
 These scripts will generate preprocessed data located in the directory specified in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`.
+
+## Reproducing Results
+> [!NOTE]
+> All results in this paper was produced on a High Performance Compute cluster using A100 GPU's using [Python 3.10](https://www.python.org/downloads/release/python-31013/). It is therefore adviced, if attempting to reproduce, to run in a similar framework.
+
+Firstly, clone the repository:
+```bash
+git clone https://github.com/Maplewarrior/InferBERT-torch.git
+```
+**(Optional)**: In the root directory, create a virtual python environment using your preferred method. Our project used `venv`:
+```bash
+python -m venv venv
+```
+Remember to activate your environment.
+
+**(Required)**: Install the requirements from `requirements.txt`
+```bash
+python -m pip install -r requirements.txt
+```
+
+
+
+### Training
+
+
+### Causal Analysis
+
+### Robustness Evaluation
+
+
+
 
 
 

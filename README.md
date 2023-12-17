@@ -63,7 +63,9 @@ python -m pip install -r requirements.txt
 ```
 
 ### Training
-The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). These can be used by changing the following configs:
+The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). 
+
+These, can be used by changing the following configs:
 
 ```yml
 [...]
@@ -81,6 +83,16 @@ model:
 ```
 
 The pretrained models provided are *no_dropout*, *fc_dropout_02*, *all_dropout_02* for both Analgesics and Tramadol models.
+
+> [!WARNING]
+> Even with a pretrained model, it is no adviced to run on a personal computer as these models tend to eat RAM.
+
+To conduct experiments on different model specifications one can modify the config as mentioned above.
+
+Finally, to train the model run:
+```bash
+python utils/trainer.py
+```
 
 ### Causal Analysis
 

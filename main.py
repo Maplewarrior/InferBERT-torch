@@ -14,11 +14,13 @@ def main():
                         help="Config to use")
     parser.add_argument('--train', action='store_true',
                         help='Flag to start model training')
+    # Train multiple experiments. Used for robustness evalutation
+    parser.add_argument("--num_train", type=int, default=1, help="Number of experiments with same parameters to run for train")
     parser.add_argument('--causal_predictions', action='store_true',
                         help='Flag to get "causal predictions"')
     parser.add_argument('--causal_inference', action='store_true',
                         help='Flag to run "causal inferenc"')
-    
+
     args = parser.parse_args()
     config_path = args.config
     # CFG = load_config(config_path)
@@ -26,8 +28,29 @@ def main():
     # print("CWD: ", os.getcwd())
 
     if args.train:
-        inferbert_trainer = Trainer(config_path)
-        inferbert_trainer.train()
+        num_experiments = int(args.num_train)
+        print(f"Training {num_experiments} models ... ")
+        if num_experiments > 1:
+            for i in range(num_experiments):
+                num_exp = i+1
+
+                inferbert_trainer = Trainer(config_path)
+
+                # Update config
+                conf = inferbert_trainer.CFG
+                conf["training"]["out_dir"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}"
+                conf["training"]["model_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/model_weights.pt"
+                conf["training"]["train_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/train_log.json"
+                conf["training"]["val_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/val_log.json"
+                conf["training"]["val_results_path"] = f"experiments/reproduction/outputs/liverfailure_{num_exp}/logs/test_log.json"
+                inferbert_trainer.CFG = conf
+
+                print(f"Running experiment {num_exp}/{num_experiments}")
+                inferbert_trainer.train()
+                print("Done")
+        else:
+            inferbert_trainer = Trainer(config_path)
+            inferbert_trainer.train()
 
     if args.causal_predictions: 
         CA = CausalAnalyser(config_path)

@@ -13,10 +13,22 @@ import pdb
 
 class Trainer:
     def __init__(self, cfg_path):
-        ################ Initialization ################
-        self.CFG = load_config(cfg_path)
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # set device depending on availability
-        self.__init_logs()
+        self._CFG = None  # Private attribute to store CFG
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.load_config_and_initialize(cfg_path)
+
+    @property
+    def CFG(self):
+        return self._CFG
+
+    @CFG.setter
+    def CFG(self, value):
+        self._CFG = value
+        self.__init_logs()  # Re-run log initialization
+
+    def load_config_and_initialize(self, cfg_path):
+        # Load configuration and initialize everything
+        self.CFG = load_config(cfg_path)  # Use the setter here
         self.__init_data()
         loss_weight = torch.ones([self.CFG['model']['n_classes']]) * len(self.df_train.loc[self.df_train['label'] == 0]) / len(self.df_train.loc[self.df_train['label'] == 1])
         print(f'Loss weight: {loss_weight}')

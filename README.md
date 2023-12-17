@@ -1,5 +1,15 @@
 # Inferbert pytorch implementation
 
+This repository was made for the final academic project in [02456 Deep Learning](https://kurser.dtu.dk/course/02456) at the Technical University of Denmark.
+
+The project was created by:
+- [s204125 Andreas Fiehn](https://github.com/AndreasLF)
+- [s204138 Michael Harborg](https://github.com/Maplewarrior)
+- [s204139 August Tollerup](https://github.com/4ug-aug)
+- [s200925 Oliver Elmgreen](https://github.com/FenrisWulven)
+
+Under the supervision of Jes Frellsen.
+
 ## Introduction
 
 Administering medication to patients is a critical element in healthcare and medical treatments. 

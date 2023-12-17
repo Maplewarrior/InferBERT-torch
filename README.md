@@ -75,7 +75,7 @@ The directory structure should look like the following after adding the data:
 
 ## Reproducing Results
 > [!NOTE]
-> All results in this paper was produced on a High Performance Compute cluster using A100 GPU's using [Python 3.10](https://www.python.org/downloads/release/python-31013/). It is therefore adviced, if attempting to reproduce, to run in a similar framework.
+> All results in this paper was produced on a High Performance Compute cluster using A100 GPU's and [Python 3.10](https://www.python.org/downloads/release/python-31013/). It is therefore adviced, if attempting to reproduce, to run in a framework with similar compute capacity.
 
 Firstly, clone the repository:
 ```bash

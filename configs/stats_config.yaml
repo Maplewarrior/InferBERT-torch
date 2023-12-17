@@ -1,0 +1,25 @@
+data:
+  tramadol:
+    dir: 'data/tramadol_data'
+    feature_path: 'data/tramadol_data/feature.csv'
+    all_path: 'data/tramadol_data/all.csv'
+  liverfailure:
+    dir: 'data/liverfailure_data'
+    feature_path: 'data/liverfailure_data/feature.csv'
+    all_path: 'data/liverfailure_data/all.csv'
+
+analysis:
+  dataset_name: tramadol
+  # tramadol_columns: ['age', 'gender', 'ade', 'indication', 'psd']
+  tramadol_columns: ['age', 'gender', 'dose', 'ade', 'indication', 'psd']
+  liverfailure_columns: ['age', 'gender', 'dose', 'outcome', 'indication', 'psd']
+  methods:
+    PRR:
+      threshold_col: PRR
+      threshold_value: 2
+    MGPS:
+      threshold_col: LowerBound
+      threshold_value: 2
+    ROR:
+      threshold_col: ROR
+      threshold_value: 2

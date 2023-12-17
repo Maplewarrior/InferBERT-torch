@@ -121,7 +121,8 @@ The pretrained models provided are *no_dropout*, *fc_dropout_02*, *all_dropout_0
 > [!WARNING]
 > Even with a pretrained model, it is no adviced to run on a personal computer as these models tend to eat RAM.
 
-To conduct experiments on different model specifications one can modify the config as mentioned above.
+> [!NOTE}
+> To conduct experiments on different model specifications one can modify the config as mentioned above.
 
 Finally, to train the model run:
 ```bash

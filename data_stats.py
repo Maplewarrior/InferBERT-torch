@@ -43,7 +43,7 @@ token_lens_liverfailure = [len(token) for token in tokenized_data_liverfailure.v
 print("Max token length (Tramadol): ", max(token_lens_tramadol))
 print("Max token length (Liverfailure): ", max(token_lens_liverfailure))
 
-91# %%
+# %%
 # PLOTS
 # Function to darken a color
 def darken_color(color, factor=0.5):
@@ -54,8 +54,8 @@ def darken_color(color, factor=0.5):
     return darkened
 
 # Base color for the face of the bins
-base_color_tramadol = 'lightblue'
-base_color_liverfailure = 'lightcoral'
+base_color_tramadol = 'bisque'
+base_color_liverfailure = 'lightblue'
 
 # Create subplots
 fig, axs = plt.subplots(2, 1, figsize=(6, 4))

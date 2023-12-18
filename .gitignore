@@ -6,6 +6,7 @@
 *.out
 jobscript_*.sh
 
+experiments/
 data/
 data/internal/
 BERTenv/

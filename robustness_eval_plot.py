@@ -10,7 +10,7 @@ import numpy as np
 
 out_dir_liver = "experiments/reproduction/outputs/liverfailure"
 root_paths_liver = [f"{out_dir_liver}_{i}/causality_output/root.csv" for i in range(1, 4)]
-out_dir_tramadol = "experiments/reproduction/outputs/tramadol_corrected"
+out_dir_tramadol = "experiments/reproduction/outputs/tramadol"
 root_paths_tramadol = [f"{out_dir_tramadol}_{i}/causality_output/root.csv" for i in range(1, 4)]
 
 
@@ -42,7 +42,7 @@ custom_cmap_oranges = mcolors.LinearSegmentedColormap.from_list('custom_oranges'
 
 
 # Create your main plot
-plt.plot(x_axis_tramadol, y_axis_tramadol, marker='o', linestyle='--', label='Tramadol (Corrected)', color=custom_cmap_oranges(0.6), alpha=0.6)
+plt.plot(x_axis_tramadol, y_axis_tramadol, marker='o', linestyle='--', label='Tramadol', color=custom_cmap_oranges(0.6), alpha=0.6)
 plt.plot(x_axis_liver, y_axis_liver, marker='o', linestyle='--', label='Liverfailure', color=custom_cmap_blues(0.6),alpha=0.8)
 plt.xlabel('Number of enhanced terms')
 plt.gca().set_xticks(plt.gca().get_xticks()[::2])

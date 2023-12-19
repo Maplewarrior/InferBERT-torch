@@ -27,7 +27,7 @@ training:
   optimization:
     Adam:
       name: Adam
-      lr: 1.0e-5
+      lr: 1.0e-4
       weight_decay: 0.0001
       epsilon: 1.0e-6
       betas:
@@ -43,17 +43,17 @@ training:
       - 0.9
       - 0.999
   validation:
-    batch_size: 1
+    batch_size: 128
     shuffle: False
 causal_inference:
   prediction:
-    batch_size: 128
+    batch_size: 256
     num_workers: 4
     input_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/all.csv
     output_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
     uncertainty_file_path: experiments/reproduction/outputs/liverfailure/uncertainty_file.csv
     uncertainty_est:
-      T: 100 # number of samples to draw for each datapoint when estimating mean and var
+      T: 30 # number of samples to draw for each datapoint when estimating mean and var
 
   analysis:
     probability_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
@@ -63,11 +63,12 @@ causal_inference:
 model:
   model_version: albert-base-v2
   pretrained_ckpt: 'experiments/reproduction/outputs/liverfailure/model_weights.pt' # leave blank if training is from scratch
+  use_focal_loss: False
   hidden_size: 768 # hidden dimension, default=768 for base-v2
   intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
   n_attention_heads: 12
   n_memory_blocks: 0
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
-  fc_dropout_prob: 0.2 # dropout at classification head
-  attention_dropout_prob: 0.0 # dropout at MHA, default=0.0
-  hidden_dropout_prob: 0.0 # dropout at FFN in encoder block, default=0.0
+  fc_dropout_prob: 0.1 # dropout at classification head
+  attention_dropout_prob: 0.1 # dropout at MHA, default=0.0
+  hidden_dropout_prob: 0.1 # dropout at FFN in encoder block, default=0.0

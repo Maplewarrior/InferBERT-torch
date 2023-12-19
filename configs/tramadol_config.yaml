@@ -44,14 +44,16 @@ training:
       - 0.9
       - 0.999
   validation:
-    batch_size: 1
+    batch_size: 128
     shuffle: False
 causal_inference:
   prediction:
-    batch_size: 32
+    batch_size: 128
     num_workers: 4
     input_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/all.csv
     output_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
+    uncertainty_est:
+      T: 30
   analysis:
     probability_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
     feature_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/feature.csv
@@ -65,6 +67,6 @@ model:
   n_attention_heads: 12
   n_memory_blocks: 0
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
-  fc_dropout_prob: 0.2 # dropout at classification head
+  fc_dropout_prob: 0.0 # dropout at classification head
   attention_dropout_prob: 0.0 # dropout at MHA, default=0.0
   hidden_dropout_prob: 0.0 # dropout at FFN in encoder block, default=0.0

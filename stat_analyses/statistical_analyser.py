@@ -16,7 +16,6 @@ class StatisticalAnalyser:
           self.blank_indicator = '[BLANK]'
           self.dataset_name = self.CFG['analysis']['dataset_name']
           self.df, self.labels = self.__LoadData()
-          pdb.set_trace()
           
      def __LoadData(self):
           df = pd.read_csv(self.CFG['data'][self.dataset_name]['feature_path'])
@@ -75,6 +74,7 @@ class StatisticalAnalyser:
                
                elif self.method == 'ROR':
                     res = ror(contingency_data)
+
                else:
                     print("The specified method is not supported")
                     raise NotImplementedError

@@ -185,14 +185,14 @@ def _generate_ALBERT_dataset(dict, target_list, out_dir, index_dict):
                 part2 = ' took ' + psd
             else:
                 part2 = ' took ' + psd + ' with ' + dose
-            if indication == ' ':
+            if indication.strip() == '':
                 part3 = ''
             else:
-                part3 = ' to treat ' + indication
-            if ade == ' ':
+                part3 = ' to treat ' + indication.strip()
+            if ade.strip() == '':
                 part4 = ''
             else:
-                part4 = ', caused ' + ade
+                part4 = ', caused ' + ade.strip()
             s = part1 + part2 + part3 + part4 + '.'
             if '00:00:00' in s:
                 continue
@@ -271,9 +271,9 @@ def main():
     # os.mkdir('/work3/s204138/InferBERT_data/TramadolMortalities/')
     # os.mkdir('/work3/s204138/InferBERT_data/TramadolMortalities/processed/')
 
-    CFG = {'dataset_dir': '/work3/s204138/InferBERT_data/TramadolMortalities/',
+    CFG = {'dataset_dir': 'data/TramadolCorrected/',
            'dataset_name': 'dataset.csv',
-           'out_dir': '/work3/s204138/InferBERT_data/TramadolMortalities/processed/'}
+           'out_dir': 'data/TramadolCorrected/processed/'}
     
     preprocess(CFG['dataset_dir'], CFG['dataset_name'], CFG['out_dir'])
     

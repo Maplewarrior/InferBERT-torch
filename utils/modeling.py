@@ -4,12 +4,13 @@ import torch.nn as nn
 from transformers import AlbertModel, AlbertConfig, get_linear_schedule_with_warmup
 from torch.cuda.amp import autocast
 
+
 class InferBERT(nn.Module):
     def __init__(self, CFG) -> None:
         super(InferBERT, self).__init__()
         self.CFG = CFG
         self.hidden_size = self.CFG['model']['hidden_size']
-        self.output_dim = self.CFG['model']['n_classes']
+        self.output_dim = 1 if not self.CFG['model']['use_focal_loss'] else 2
         albert_config = AlbertConfig(hidden_size=768, intermediate_size=3072, hidden_dropout_prob=self.CFG['model']['hidden_dropout_prob'],
                                      attention_probs_dropout_prob=self.CFG['model']['attention_dropout_prob'])
         albert_config = AlbertConfig(**{
@@ -23,7 +24,10 @@ class InferBERT(nn.Module):
         self.base = AlbertModel.from_pretrained(self.CFG['model']['model_version'], config=albert_config)
         self.dropout = nn.Dropout(p=self.CFG['model']['fc_dropout_prob'])
         self.output_layer = nn.Linear(self.hidden_size, self.output_dim)
+        # self.alpha = torch.tensor([1.], requires_grad=True).cuda()
+        # self.beta = torch.tensor([0.], requires_grad=True).cuda()
         self.sigmoid = nn.Sigmoid()
+        self.softmax = nn.Softmax(dim=1)
     
     @autocast() # run mixed precision
     def forward(self, input_ids, attention_mask, token_type_ids):
@@ -32,7 +36,8 @@ class InferBERT(nn.Module):
         """
         cls_reps = self.base(input_ids, attention_mask, token_type_ids)[1] # run ALBERT forward pass
         logits = self.output_layer(self.dropout(cls_reps)) # classification layer
-        probs = self.sigmoid(logits) # get probabilities from logits
+        probs = self.sigmoid(logits) if not self.CFG['model']['use_focal_loss'] else self.softmax(logits) # get probabilities from logits
+        #probs = self.sigmoid(self.alpha * logits - self.beta) # get probabilities from logits
         # probs = self.sigmoid(torch.tensor(logits[0].item(), 1-logits[0].item()))
         return {'logits' : logits,
                 'probs' : probs}
@@ -47,10 +52,10 @@ class InferBERT(nn.Module):
             cls_reps = self.base(input_ids, attention_mask, token_type_ids)[1] # run ALBERT forward pass
             logits = self.output_layer(self.dropout(cls_reps)) # classification layer
             probs = self.sigmoid(logits) # get probabilities from logits
-            res[i] = probs
+            res[i] = probs.squeeze()
         
-        means = torch.mean(res, dim=0).tolist()
-        vars = torch.var(res, dim=0).tolist()
+        means = torch.mean(res, dim=0)
+        vars = torch.var(res, dim=0)
         return means, vars
     
 def build_model(CFG):
@@ -65,24 +70,10 @@ def build_model(CFG):
     return model   
 
 def build_optimizer(model, CFG):
-
-    weight_decay = CFG['training']['optimization']['Adam']['weight_decay']
-
-    # Get named parameters 
-    param_optimizer = list(model.named_parameters())
-    no_decay = ['bias', 'LayerNorm.weight', "LayerNorm", "layer_norm",]  # Add any other patterns you want to exclude from weight decay
-
-    # Exclude parameters from weight decay if they are in no_decay list
-    optimizer_grouped_parameters = [
-        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': weight_decay},
-        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
-    ]
-
-    # Initialize optimizer
     if CFG['training']['use_optimizer'] == 'Adam':
-        optimizer = optim.AdamW(params=optimizer_grouped_parameters,
+        optimizer = optim.AdamW(params=model.parameters(),
                                 lr=CFG['training']['optimization']['Adam']['lr'],
-                                weight_decay=weight_decay,
+                                weight_decay=CFG['training']['optimization']['Adam']['weight_decay'],
                                 betas=tuple(CFG['training']['optimization']['Adam']['betas']),
                                 eps=CFG['training']['optimization']['Adam']['epsilon'])
     else:

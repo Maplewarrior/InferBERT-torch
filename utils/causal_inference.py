@@ -68,6 +68,7 @@ def causal_tree(feature_file, probability_file, threshold, condition_list):
 
     def put_in_dict(index, str, dict):
         a = str.split(', ')
+        a = [s.strip() for s in a]
         for item in a:
             if not item in dict:
                 dict[item] = [index]
@@ -98,7 +99,7 @@ def causal_tree(feature_file, probability_file, threshold, condition_list):
                     dose_not_empty_dict[index] = True
                 if age != ' ':
                     age_not_empty_dict[index] = True
-                if ade != ' ':
+                if ade.strip() != '':
                     ade_not_empty_dict[index] = True
                 if psd != ' ':
                     psd_not_empty_dict[index] = True

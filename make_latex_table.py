@@ -49,7 +49,14 @@ if __name__ == '__main__':
     make_root_latex_table(root_path, features)
 
     root_path = 'experiments/reproduction/outputs/tramadol_1/causality_output/root.csv'
-    features = ['SUICIDE ATTEMPT', '40-64', 'Hydrocodone Bitartrate', 'Drug abuse', 'Male']
+    features = ['Completed suicide', '40-64', 'Male', 'Drug abuse', 'Hydrocodone Bitartrate', 'Death', 'death']
 
     print("Tramadol-related mortalities")
+    make_root_latex_table(root_path, features)
+
+
+    root_path = 'experiments/reproduction/outputs/tramadol_corrected/causality_output/root.csv'
+    features = ['Completed suicide', '40-64', 'Male', 'Drug abuse', 'Hydrocodone Bitartrate', 'Death', 'death']
+
+    print("Tramadol-related mortalities (Corrected)")
     make_root_latex_table(root_path, features)

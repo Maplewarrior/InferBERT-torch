@@ -1,18 +1,17 @@
-from utils.misc import load_config
+from vigipy.utils.misc import load_config
 import pandas as pd
 import os
 import pdb
-from stat_analyses.vigipy.utils.data_prep import convert
-from stat_analyses.vigipy.PRR import prr
-from stat_analyses.vigipy.ROR import ror
-from stat_analyses.vigipy.GPS import gps
+from vigipy.utils.data_prep import convert
+from vigipy.PRR import prr
+from vigipy.ROR import ror
+from vigipy.GPS import gps
 import matplotlib.pyplot as plt
 import venn # pyvenn package
 
 class StatisticalAnalyser:
-     def __init__(self, config_path: str, method: str) -> None:
+     def __init__(self, config_path: str) -> None:
           self.CFG = load_config(config_path)
-          self.method = method
           self.blank_indicator = '[BLANK]'
           self.dataset_name = self.CFG['analysis']['dataset_name']
           self.df, self.labels = self.__LoadData()
@@ -61,18 +60,18 @@ class StatisticalAnalyser:
           contingency_data = convert(pd.DataFrame.from_dict(contingency_data))
           return contingency_data
 
-     def analyse(self):
+     def analyse(self, method: str):
           
           for i, feature_col in enumerate(self.CFG['analysis'][f'{self.dataset_name}_columns']):
                print(f'Performing analysis for {feature_col}')
                contingency_data = self.PreprocessData(feature_col)
-               if self.method == 'PRR':
+               if method == 'PRR':
                     res = prr(contingency_data)
                
-               elif self.method == 'MGPS':
+               elif method == 'MGPS':
                     res = gps(contingency_data)
                
-               elif self.method == 'ROR':
+               elif method == 'ROR':
                     res = ror(contingency_data)
 
                else:
@@ -84,35 +83,27 @@ class StatisticalAnalyser:
                else:
                     result = pd.concat([result, res.all_signals], ignore_index=True, axis=0)
           
-          result = self.postprocess_results(result)
+          result = self.postprocess_results(result, method)
           return result
      
-     def postprocess_results(self, result):
+     def postprocess_results(self, result, method):
           # filter results to only keep significant effects
-          threshold_col = self.CFG['analysis']['methods'][self.method]['threshold_col']
-          threshold_val = self.CFG['analysis']['methods'][self.method]['threshold_value']
+          threshold_col = self.CFG['analysis']['methods'][method]['threshold_col']
+          threshold_val = self.CFG['analysis']['methods'][method]['threshold_value']
           result = result.loc[(result['Adverse Event'] == 'Positive') & (result[threshold_col] >= threshold_val) & (result['product margin'] >= 100)].reset_index(drop=True)
           L = [e.split('||') for e in result['Product']]
           result['Feature'] = [e[0] for e in L]
           result['value'] = [e[1] for e in L]
           result = result[['Feature', 'value', 'Adverse Event', threshold_col, 'p_value', 'Count', 'Expected Count', 'event margin', 'product margin']]
-          result.to_csv(f'results/{self.dataset_name}/{self.method}_analysis.csv', index=False)
+          result.to_csv(f'stat_analyses/results/{self.dataset_name}/{method}_analysis.csv', index=False)
           return result
      
-     def __venn_diagram(self, results):
-          methods = list(results.keys())
-          labels = venn.get_labels([results[method] for method in methods])
-          if len(results) == 3:
-               fig, ax = venn.venn3(labels, names=methods)
-               fig.show()
-          elif len(results) == 4:
-               fig, ax = venn.venn4(labels, names=methods)
-               ax.set_title(f'{self.dataset_name} - method comparsion')
-               fig.show()
+     def __venn_diagram(self, results, ax):
+          venn.venn(results, cmap="Set2", fontsize=9, legend_loc="lower right", ax=ax)
      
-     def plot_results(self):
+     def plot_results(self, ax):
           ## load results
-          result_dir = f'results/{self.dataset_name}'
+          result_dir = f'stat_analyses/results/{self.dataset_name}'
           result_files = os.listdir(result_dir)
           results = {}
           if len(result_files) >= 3:
@@ -126,5 +117,48 @@ class StatisticalAnalyser:
                return
           
           ## plot results
-          self.__venn_diagram(results)
-          plt.show()
+          fig = self.__venn_diagram(results, ax)
+
+          return fig 
+
+
+if __name__ == '__main__':
+     SA_liverfailure = StatisticalAnalyser('configs/stats_config_liverfailure.yaml')
+     SA_tramadol = StatisticalAnalyser('configs/stats_config_tramadol.yaml')
+
+     # Run only the first time
+     # SA_liverfailure.analyse('PRR')
+     # SA_liverfailure.analyse('ROR')
+     # SA_liverfailure.analyse('MGPS')
+     # SA_tramadol.analyse('PRR')
+     # SA_tramadol.analyse('ROR')
+     # SA_tramadol.analyse('MGPS')
+
+
+     # Create a figure with two subplots side by side
+     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6, 4))  # Adjust figsize as needed
+
+     # Plot results in each subplot
+     plt1 = SA_liverfailure.plot_results(ax1)
+     plt2 = SA_tramadol.plot_results(ax2)
+
+     # Optionally set titles for each subplot
+     ax1.set_title("Liver Failure Analysis")
+     ax2.set_title("Tramadol Analysis")
+
+
+     plt1 = SA_liverfailure.plot_results(ax1)
+     plt2 = SA_tramadol.plot_results(ax2)
+
+     # Adjust layout and show the plot
+     plt.tight_layout()
+     plt.savefig('stat_analyses/results/legacy_venn_diagram.pdf', format='pdf', dpi=300)
+
+
+     # # Two plots side 
+     # fig, axs = plt.subplots(1, 2)
+     
+     # plt1 = SA.plot_results()
+     # plt1.title('Liver failure')
+     # plt1.ylabel('')
+     # plt1.xlabel('')

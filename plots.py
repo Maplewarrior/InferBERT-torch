@@ -130,7 +130,7 @@ def plot_side_by_side(exp_folder_path_1, exp_folder_path_2, out_file_name='plots
 
 
     # plot 3 figures side by side
-    fig, axs = plt.subplots(1, 2, figsize=(8, 4))
+    fig, axs = plt.subplots(1, 2, figsize=(6, 3))
 
 
     ax = axs[0]

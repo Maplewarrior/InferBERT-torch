@@ -1,10 +1,10 @@
 import warnings
 import numpy as np
 import pandas as pd
-from ..utils.lbe import lbe
+from utils.lbe import lbe
 from scipy.stats import fisher_exact, hypergeom
-from ..utils import Container
-from ..utils import calculate_expected
+from utils import Container
+from utils import calculate_expected
 
 
 def rfet(

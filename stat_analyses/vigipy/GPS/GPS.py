@@ -4,10 +4,10 @@ from scipy.special import gdtr
 from scipy.optimize import minimize
 from sympy.functions.special import gamma_functions
 
-from ..utils import Container
-from ..utils import calculate_expected
-from ..utils.distribution_funcs.negative_binomials import dnbinom, pnbinom
-from ..utils.distribution_funcs.quantile_funcs import quantiles
+from utils import Container
+from utils import calculate_expected
+from utils.distribution_funcs.negative_binomials import dnbinom, pnbinom
+from utils.distribution_funcs.quantile_funcs import quantiles
 
 dnbinom = np.vectorize(dnbinom)
 pnbinom = np.vectorize(pnbinom)

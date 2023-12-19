@@ -153,12 +153,3 @@ if __name__ == '__main__':
      # Adjust layout and show the plot
      plt.tight_layout()
      plt.savefig('stat_analyses/results/legacy_venn_diagram.pdf', format='pdf', dpi=300)
-
-
-     # # Two plots side 
-     # fig, axs = plt.subplots(1, 2)
-     
-     # plt1 = SA.plot_results()
-     # plt1.title('Liver failure')
-     # plt1.ylabel('')
-     # plt1.xlabel('')

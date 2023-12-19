@@ -4,7 +4,7 @@ data:
   test_path: data/Tramadol/processed/test.csv
   feature_path: data/Tramadol/processed/feature.csv
   all_path: data/Tramadol/processed/all.csv
-  max_seq_len: 128
+  max_seq_len: 256
   is_lowercase: False # albert-base-v2 is uncased
   pos_weight: 1 # Vector with dimension equal to n_classes that accounts for class imbalances --> vector containing (n_negative / n_positive)
 
@@ -28,8 +28,8 @@ training:
   optimization:
     Adam:
       name: Adam
-      lr: 1.0e-5
-      weight_decay: 0.0001
+      lr: 2.0e-6
+      weight_decay: 0.01
       epsilon: 1.0e-6
       betas:
       - 0.9
@@ -59,7 +59,12 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: experiments/reproduction/outputs/tramadol/model_weights.pt
-  hidden_size: 768 # changes depending on model_version!
+  pretrained_ckpt: 
+  hidden_size: 768 # hidden dimension, default=768 for base-v2
+  intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
+  n_attention_heads: 12
+  n_memory_blocks: 0
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
-  dropout_prob: 0.2
+  fc_dropout_prob: 0.2 # dropout at classification head
+  attention_dropout_prob: 0.0 # dropout at MHA, default=0.0
+  hidden_dropout_prob: 0.0 # dropout at FFN in encoder block, default=0.0

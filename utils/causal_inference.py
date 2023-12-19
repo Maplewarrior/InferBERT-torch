@@ -176,22 +176,24 @@ def causal_tree(feature_file, probability_file, threshold, condition_list):
         return dict, dict_in, dict_out
 
     gender_gap_dict, gender_in_dict, gender_out_dict = compute_gap(gender_dict, probability_dict, gender_not_empty_dict)
-    print("Gender done!")
     age_gap_dict, age_in_dict, age_out_dict = compute_gap(age_dict, probability_dict, age_not_empty_dict)
-    print("Age done!")
     psd_gap_dict, psd_in_dict, psd_out_dict = compute_gap(psd_dict, probability_dict, psd_not_empty_dict)
     dose_gap_dict, dose_in_dict, dose_out_dict = compute_gap(dose_dict, probability_dict, dose_not_empty_dict)
     indication_gap_dict, indication_in_dict, indication_out_dict = compute_gap(indication_dict, probability_dict,
                                                                                indication_not_empty_dict)
     outcome_gap_dict, outcome_in_dict, outcome_out_dict = compute_gap(outcome_dict, probability_dict,
                                                                       outcome_not_empty_dict)
+    ade_gap_dict, ade_in_dict, ade_out_dict = compute_gap(ade_dict,
+                                                          probability_dict,
+                                                          ade_not_empty_dict)
     print("All done!")
     total_dict = {**gender_gap_dict,
                   **age_gap_dict,
                   **psd_gap_dict,
                   **dose_gap_dict,
                   **indication_gap_dict,
-                  **outcome_gap_dict,
+                #   **outcome_gap_dict,
+                  **ade_gap_dict,
                   }
     cell_list = []
     for key in total_dict:
@@ -219,6 +221,9 @@ def causal_tree(feature_file, probability_file, threshold, condition_list):
         if key in outcome_gap_dict:
             cell = causal_cell('outcome', key, total_dict[key], outcome_in_dict[key], outcome_out_dict[key], p_values,
                                len(outcome_dict[key]), condition_list)
+        if key in ade_gap_dict:
+            cell = causal_cell('ade', key, total_dict[key], ade_in_dict[key], ade_out_dict[key], p_values,
+                               len(ade_dict[key]), condition_list)
         cell_list.append(cell)
     return cell_list
 

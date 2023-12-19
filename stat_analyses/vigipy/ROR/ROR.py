@@ -2,9 +2,9 @@ import warnings
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
-from ..utils.lbe import lbe
-from ..utils import Container
-from ..utils import calculate_expected
+from utils.lbe import lbe
+from utils import Container
+from utils import calculate_expected
 
 
 def ror(

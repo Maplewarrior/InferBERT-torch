@@ -2,10 +2,10 @@ from utils.misc import load_config
 import pandas as pd
 import os
 import pdb
-from stat_analyses.vigipy.utils.data_prep import convert
-from stat_analyses.vigipy.PRR import prr
-from stat_analyses.vigipy.ROR import ror
-from stat_analyses.vigipy.GPS import gps
+from utils.data_prep import convert
+from vigipy.PRR import prr
+from vigipy.ROR import ror
+from vigipy.GPS import gps
 import matplotlib.pyplot as plt
 import venn # pyvenn package
 
@@ -128,3 +128,8 @@ class StatisticalAnalyser:
           ## plot results
           self.__venn_diagram(results)
           plt.show()
+
+if __name__ == "__main__":
+     stats_class = StatisticalAnalyser('configs/stats_config.yaml', 'PRR')
+     stats_class.analyse()
+     stats_class.plot_results()

@@ -1,5 +1,5 @@
 import pandas as pd
-from ..utils import convert
+from utils import convert
 
 
 class LongitudinalModel:

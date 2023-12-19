@@ -42,15 +42,13 @@ def test_dataloader():
     print(f"Decoded input: {decoded_ids}")
     pdb.set_trace()
     
-def run_calibration_test(config_path: str = 'configs/tramadol_config.yaml'):
+def run_calibration_test(config_path: str = 'configs/liverfailure_config.yaml'):
     CA = CalibrationAnalyser(config_path)
-    CA.test_calibration(frac_steps=0.05)
-
-
+    # CA.test_calibration(frac_steps=0.1)
+    CA.test_calibration2(with_uncertainty_est=False)
 
 if __name__ == '__main__':
     run_calibration_test()
-    
     # df = pd.read_csv('experiments/reproduction/outputs/tramadol/calibration_results.csv')
     # print(df)
     # main()

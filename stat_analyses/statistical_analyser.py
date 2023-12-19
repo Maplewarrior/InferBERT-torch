@@ -2,7 +2,6 @@ from vigipy.utils.misc import load_config
 import pandas as pd
 import os
 import pdb
-from vigipy.utils.data_prep import convert
 from vigipy.PRR import prr
 from vigipy.ROR import ror
 from vigipy.GPS import gps

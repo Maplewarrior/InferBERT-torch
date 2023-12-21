@@ -1,4 +1,4 @@
-from vigipy.utils.misc import load_config
+from utils.misc import load_config
 import pandas as pd
 import os
 import pdb
@@ -97,10 +97,14 @@ class StatisticalAnalyser:
           result.to_csv(f'stat_analyses/results/{self.dataset_name}/{method}_analysis.csv', index=False)
           return result
      
-     def __venn_diagram(self, results, ax):
-          venn.venn(results, cmap="Set2", fontsize=9, legend_loc="lower right", ax=ax)
+     def __venn_diagram(self, results, ax, legend_loc=None):
+          if legend_loc:
+               venn.venn(results, cmap="Set2", fontsize=9, legend_loc=legend_loc, ax=ax)
+          else:
+               venn.venn(results, cmap="Set2", fontsize=9, legend_loc="lower right", ax=ax)
+
      
-     def plot_results(self, ax):
+     def plot_results(self, ax, legend_loc=None):
           ## load results
           result_dir = f'stat_analyses/results/{self.dataset_name}'
           result_files = os.listdir(result_dir)
@@ -116,7 +120,7 @@ class StatisticalAnalyser:
                return
           
           ## plot results
-          fig = self.__venn_diagram(results, ax)
+          fig = self.__venn_diagram(results, ax, legend_loc)
 
           return fig 
 
@@ -126,28 +130,26 @@ if __name__ == '__main__':
      SA_tramadol = StatisticalAnalyser('configs/stats_config_tramadol.yaml')
 
      # Run only the first time
-     # SA_liverfailure.analyse('PRR')
-     # SA_liverfailure.analyse('ROR')
-     # SA_liverfailure.analyse('MGPS')
-     # SA_tramadol.analyse('PRR')
-     # SA_tramadol.analyse('ROR')
-     # SA_tramadol.analyse('MGPS')
-
+     SA_liverfailure.analyse('PRR')
+     SA_liverfailure.analyse('ROR')
+     SA_liverfailure.analyse('MGPS')
+     SA_tramadol.analyse('PRR')
+     SA_tramadol.analyse('ROR')
+     SA_tramadol.analyse('MGPS')
 
      # Create a figure with two subplots side by side
      fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6, 4))  # Adjust figsize as needed
 
      # Plot results in each subplot
-     plt1 = SA_liverfailure.plot_results(ax1)
+     plt1 = SA_liverfailure.plot_results(ax1, legend_loc="lower right")
      plt2 = SA_tramadol.plot_results(ax2)
 
      # Optionally set titles for each subplot
      ax1.set_title("Liver Failure Analysis")
      ax2.set_title("Tramadol Analysis")
 
+     ax1.get_legend().remove()
 
-     plt1 = SA_liverfailure.plot_results(ax1)
-     plt2 = SA_tramadol.plot_results(ax2)
 
      # Adjust layout and show the plot
      plt.tight_layout()

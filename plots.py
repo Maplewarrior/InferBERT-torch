@@ -190,32 +190,62 @@ def plot_side_by_side(exp_folder_path_1, exp_folder_path_2, out_file_name='plots
     plt.savefig(out_file_name, format='pdf', dpi=300)
     plt.show()
 
+def plot_one(exp_folder_path, out_file_name="plots/train_val_loss_acc_tramadol_corr.pdf"):
+    
+    exp_dir_tramadol_corr = exp_folder_path
+
+    exp_num = 1 
+    train_res_tramadol_corr = f'{exp_dir_tramadol_corr}_{exp_num}/logs/train_log.json'
+    test_res_tramadol_corr = f'{exp_dir_tramadol_corr}_{exp_num}/logs/test_log.json'
+
+    train_loss_tramadol_corr, test_loss_tramadol_corr, train_acc_tramadol_corr, test_acc_tramadol_corr, epochs_tramadol_corr = get_losses_acc(train_res_tramadol_corr, test_res_tramadol_corr)
+
+    steps_per_epoch_tramadol = 128
+
+    # Load the original "Blues" colormap
+    cmap_greens = plt.cm.Greens
+    cmap_reds = plt.cm.Reds
+
+    # Create a custom colormap that excludes the lighter part
+    # For example, use only the colors from 0.3 to 1.0 of the original colormap
+    start = 0.3
+    stop = 1.0
+    colors_greens = cmap_greens(np.linspace(start, stop, cmap_greens.N))
+    custom_cmap_greens = mcolors.LinearSegmentedColormap.from_list('custom_greens', colors_greens)
+    colors_reds = cmap_reds(np.linspace(start, stop, cmap_reds.N))
+    custom_cmap_reds = mcolors.LinearSegmentedColormap.from_list('custom_reds', colors_reds)
+
+
+    # plot 3 figures side by side
+    fig, axs = plt.subplots(1, 1, figsize=(9, 6))
+
+
+    ax = axs
+    ax.set_title("Tramadol-related mortalities (corrected)")
+    if steps_per_epoch_tramadol:
+        ax.set_xlabel('Steps')
+        epochs_tramadol_corr = [ep*steps_per_epoch_tramadol for ep in epochs_tramadol_corr]
+    else:
+        plt.set_xlabel('Epochs')
+    # plot tramadol corrected
+    ax.plot(epochs_tramadol_corr, train_loss_tramadol_corr, label='Training loss', color=custom_cmap_reds(0.5), linestyle='--')
+    ax.plot(epochs_tramadol_corr, test_loss_tramadol_corr, label='Validation loss', color=custom_cmap_reds(0.5))
+
+    ax.plot(epochs_tramadol_corr, train_acc_tramadol_corr, label='Training accuracy', color = custom_cmap_greens(0.5), linestyle='--')
+    ax.plot(epochs_tramadol_corr, test_acc_tramadol_corr, label='Validation accuracy', color = custom_cmap_greens(0.5))
+    ax.set_ylim(0, 1)
+
+    fig.suptitle("Training and validation loss & accuracy", fontsize=12)
+    plt.legend()
+    plt.tight_layout()
+    # savew figure as pdf
+    plt.savefig(out_file_name, format='pdf', dpi=300)
+    plt.show()
+
 if __name__ == '__main__':
     exp_dir_liver = "experiments/reproduction/outputs/liverfailure"
     exp_dir_tramadol = "experiments/reproduction/outputs/tramadol"
+    exp_dir_tramadol_corr = "experiments/reproduction/outputs/tramadol_corrected"
 
     plot_side_by_side(exp_dir_liver, exp_dir_tramadol, out_file_name='plots/train_val_loss_acc.pdf')
-
-
-    # exp_dir = "experiments/reproduction/outputs/liverfailure"
-
-    # for i in range(1, 6):
-    #     visualize_train_val_dynamics(train_result_path=f'{exp_dir}_{i}/logs/train_log.json',
-    #                                 val_result_path=f'{exp_dir}_{i}/logs/test_log.json',
-    #                                 out_dir=f'plots/liverfailure_{i}', 
-    #                                 out_file_name="train_validation_loss_acc",
-    #                                 steps_per_epoch=184,
-    #                                 plot_title = f"Training and Validation loss & accuracy \n (Analgesic-induced Liver Failure)")
-
-    # visualize_train_val_dynamics(train_result_path='experiments/reproduction/outputs/liverfailure_1/logs/train_log.json',
-    #                             val_result_path='experiments/reproduction/outputs/liverfailure_1/logs/test_log.json',
-    #                             out_dir="plots/liverfailure_1", 
-    #                             out_file_name="train_validation_loss_acc.",
-    #                             steps_per_epoch=184,
-    #                             plot_title = "Training and Validation loss & accuracy \n (Analgesic-induced Liver Failure)")
-    # visualize_train_val_dynamics(train_result_path='experiments/reproduction/outputs/tramadol_1/logs/train_log.json',
-    #                             val_result_path='experiments/reproduction/outputs/tramadol_1/logs/val_log.json',
-    #                             out_dir="plots/tramadol_1", 
-    #                             out_file_name="train_validation_loss_acc",
-    #                             steps_per_epoch=128,
-    #                             plot_title = "Training and Validation loss & accuracy \n (Tramadol-related mortalities)")
+    plot_one(exp_dir_tramadol_corr, out_file_name="plots/train_val_loss_acc_tramadol_corr.pdf")

@@ -2,9 +2,13 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 from transformers import AlbertTokenizer
-from utils.misc import load_config, get_calibrated_subset
-from utils.dataset import ADRDataset
-from utils.modeling import build_model
+# from utils.misc import load_config
+# from utils.dataset import ADRDataset
+# from utils.modeling import build_model
+from misc import load_config
+from dataset import ADRDataset
+from modeling import build_model
+
 from sklearn.calibration import calibration_curve
 import matplotlib.pyplot as plt
 import numpy as np
@@ -82,56 +86,6 @@ class CalibrationAnalyser:
     def __set_dropout_to_train(self, m):
         if type(m) == torch.nn.Dropout:
             m.train()
-
-    def decode_ids(self, input_ids):
-        # decode inputs
-        decoded = []
-        for ids in input_ids:
-            decoded.append(self.tokenizer.decode(ids).split('[SEP]')[0].strip('[CLS]'))
-        return decoded
-    
-    def test_calibration(self, frac_steps=0.1):
-        self.model.eval()
-        with_uncertainty_est = False
-        if with_uncertainty_est:
-            self.model.apply(self.__set_dropout_to_train)
-
-        fractions = [e / (1/frac_steps) for e in range(1, int(1 / frac_steps+1))]
-        for frac in fractions:
-            df_sub = get_calibrated_subset(self.df_test, positive_frac=frac)
-            assert abs(len(df_sub.loc[df_sub['label'] == 1]) / len(df_sub) - frac) < 0.02, 'Calibration went wrong...'
-
-            dataloader = DataLoader(ADRDataset(df=get_calibrated_subset(self.df_test, positive_frac=frac), CFG=self.CFG), 
-                                                        batch_size=self.CFG['causal_inference']['prediction']['batch_size'], 
-                                                        num_workers=self.CFG['causal_inference']['prediction']['num_workers'],
-                                                        shuffle=True)
-            
-            predictions = []
-            
-            with torch.no_grad():
-                for i, (input_ids, attn_masks, token_type_ids, labels) in enumerate(dataloader):
-                    input_ids, attn_masks, token_type_ids, labels = input_ids.to(self.device), attn_masks.to(self.device), token_type_ids.to(self.device), labels.to(self.device)
-                    if not with_uncertainty_est:
-                        out = self.model(input_ids, attn_masks, token_type_ids)['probs'] # get predictions
-                    else:
-                        out, _ = self.model.uncertainty_est_inference(input_ids, attn_masks, token_type_ids) # get mean prediction
-
-                    # sentences = self.decode_ids(input_ids=input_ids) # extract input sentences
-
-                    ### log results ###
-                    if input_ids.size(0) == 1: # batch_size = 1
-                        predictions.append(out.item())
-                    else: # batch_size > 1
-                        predictions.extend([e.item() for e in out])
-                    
-                    if max(1, i) % (len(dataloader) // 2) == 0:
-                        print(f'Iter: {i}/{len(dataloader)}')
-                self.result_dict['mean_probability'].append(torch.mean(torch.tensor(predictions), dtype=torch.float).item())
-                self.result_dict['positive_fraction'].append(frac)
-
-        calibration_df = pd.DataFrame.from_dict(self.result_dict)
-        save_dir = self.CFG['training']['out_dir']
-        calibration_df.to_csv(f'{save_dir}/calibration_results.csv', index=False)
     
     def test_calibration2(self, with_uncertainty_est = False):
         self.model.eval()
@@ -160,7 +114,6 @@ class CalibrationAnalyser:
                     print(f"iter: {i}/{len(self.dataloader)}")
 
                 
-
         ECE = calculate_ECE(y_pred_proba, y_true, n_bins=3)
         print(f'ECE score: {ECE}')
         fop, mpv = calibration_curve(y_true, y_pred_proba, n_bins=10)
@@ -171,3 +124,55 @@ class CalibrationAnalyser:
         plt.ylabel("Fraction of positives")
         plt.savefig(self.CFG['training']['out_dir']+"/validation_cal_{}_{}_visualization.pdf".format('all_dropout', 0.5), dpi = 300)
         plt.clf()
+    
+    def create_calibration_plots(self, model_paths: list[str]):
+        all_preds = []
+        model_names = ['BCE', 'focal loss']
+        focal_loss = [False, True]
+        colors = ['red', 'blue']
+        for i, path in enumerate(model_paths):
+            print(f'Path: {path}')
+            self.CFG['model']['pretrained_ckpt'] = path
+            self.CFG['model']['use_focal_loss'] = focal_loss[i]
+            self.__init_model()
+            y_pred_proba = []
+            y_true = []
+            self.model.eval()
+            with torch.no_grad():
+                for i, (input_ids, attn_masks, token_type_ids, labels) in enumerate(self.dataloader):
+                    input_ids, attn_masks, token_type_ids, labels = input_ids.to(self.device), attn_masks.to(self.device), token_type_ids.to(self.device), labels.to(self.device)
+                    out = self.model(input_ids, attn_masks, token_type_ids)['probs'] # get predictions
+                
+                    ### log results ###
+                    if input_ids.size(0) == 1: # batch_size = 1
+                        y_pred_proba.append(out.item())
+                        y_true.append(labels.item())
+                    else: # batch_size > 1
+                        if out.size(1) == 2:
+                            y_pred_proba.extend([e[1].item() for e in out])
+                        else:
+                            y_pred_proba.extend([e.item() for e in out])
+                        y_true.extend([e.item() for e in labels])
+                all_preds.append(y_pred_proba)
+        plt.figure(figsize=(6,3))
+
+        for j in range(len(all_preds)):
+            ECE = calculate_ECE(all_preds[j], y_true, n_bins=10)
+            print(f'ECE score for {model_names[j]}: {ECE}')
+            fop, mpv = calibration_curve(y_true, all_preds[j], n_bins=10)
+            plt.plot(mpv, fop, marker='.', color = colors[j], label=model_names[j])
+        
+        plt.plot([0, 1], [0, 1], linestyle='--', color = "black")
+        plt.xlabel("Mean prediction value")
+        plt.ylabel("Fraction of positives")
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(self.CFG['training']['out_dir']+"/Calibration_{}_visualization.pdf".format('all_methods'), dpi = 300)
+        plt.clf()
+
+if __name__ == '__main__':
+    CA = CalibrationAnalyser(cfg_path='configs/tramadol_config_ALF.yaml')
+    model_paths = ['experiments/reproduction/outputs/tramadol_1/model_weights.pt', 'experiments/reproduction/outputs/tramadol_focal/model_weights_31_adaptive.pt']
+    CA.create_calibration_plots(model_paths)
+
+                    

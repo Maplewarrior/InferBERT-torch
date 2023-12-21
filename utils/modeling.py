@@ -65,7 +65,7 @@ def build_model(CFG):
     else:
         print('Model initialized from {path}'.format(path=CFG['model']['pretrained_ckpt'].split('/')[-1]))
         model = InferBERT(CFG)
-        model.load_state_dict(torch.load(CFG['model']['pretrained_ckpt'], map_location=torch.device('cpu')))
+        model.load_state_dict(torch.load(CFG['model']['pretrained_ckpt'], map_location=torch.device('cpu')), strict=False)
     
     return model   
 

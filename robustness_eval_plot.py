@@ -44,10 +44,12 @@ custom_cmap_oranges = mcolors.LinearSegmentedColormap.from_list('custom_oranges'
 # Create your main plot
 plt.plot(x_axis_tramadol, y_axis_tramadol, marker='o', linestyle='--', label='Tramadol', color=custom_cmap_oranges(0.6), alpha=0.6)
 plt.plot(x_axis_liver, y_axis_liver, marker='o', linestyle='--', label='Liverfailure', color=custom_cmap_blues(0.6),alpha=0.8)
-plt.xlabel('Number of enhanced terms')
+plt.xlabel('Number of enhanced terms ($k$)')
 plt.gca().set_xticks(plt.gca().get_xticks()[::2])
 plt.ylim(0, 1)
-plt.ylabel('Percentage of overlapped terms')
+max_x_len = max(len(x_axis_tramadol), len(x_axis_liver))
+plt.xlim(0, max_x_len + 5)
+plt.ylabel('Percentage of overlapped terms (POT)')
 plt.legend(fontsize=9, loc="lower left", ncol = 2)
 # grid 
 plt.title('Robustness evaluation')

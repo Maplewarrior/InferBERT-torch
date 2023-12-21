@@ -35,8 +35,11 @@ def robustness_evaluation_plot_data(root_paths: list[str]):
         df_root = pd.read_csv(file)
         results[i] = df_root['value'].values.tolist()
     
+
+    # lenght of the longest list
+    max_len = max([len(val) for val in results.values()])
     # Plot axis 
-    x_axis = list(range(1,21))
+    x_axis = list(range(1,max_len+5))
     y_axis = []
 
     for i in x_axis:

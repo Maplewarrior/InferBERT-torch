@@ -126,15 +126,20 @@ The pretrained models provided are *no_dropout*, *fc_dropout_02*, *all_dropout_0
 
 Finally, to train the model run:
 ```bash
-python utils/trainer.py
+python main.py --train --config <config_path>
 ```
 
 ### Causal Analysis
 To generate the causal analysis results run the `utils/causal_inference.py` script:
 ```bash
-python utils/causal_inference.py
+python main.py --causal_predictions --config <config_path>
 ```
-This will generate two csv files, one for the root effects and one for sub population effects. These are saved to `'experiments/reproduction/outputs/liverfailure/causality_output'` or otherwise stated paths in the `configs/liverfailure_config.yaml` or `configs/tramadol_config.yaml`.
+This will generate a csv file containing probabilities for the endpoint being 1 and their true label, probability_file.csv.
+To create the root.csv root effects and one for sub population effects run:
+```bash
+python main.py --causal_inference --config <config_path>
+```
+To be able to run this you need to have created the probability_file.csv
 
 ### Robustness Evaluation
 

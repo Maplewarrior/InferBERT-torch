@@ -50,14 +50,14 @@ causal_inference:
   prediction:
     batch_size: 128
     num_workers: 4
-    input_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/all.csv
-    output_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
+    input_file_path: data/reproduction/TramadolMortalities/processed/all.csv
+    output_file_path: experiments/reproduction/outputs/tramadol/probability_file.csv
     uncertainty_est:
       T: 30
   analysis:
-    probability_file_path: experiments/reproduction/outputs/liverfailure/probability_file.csv
-    feature_file_path: data/reproduction/Analgesics-induced acute liver failure/processed/feature.csv
-    output_dir: experiments/reproduction/outputs/liverfailure/causality_output
+    probability_file_path: experiments/reproduction/outputs/tramadol/probability_file.csv
+    feature_file_path: data/reproduction/TramadolMortalities/processed/feature.csv
+    output_dir: experiments/reproduction/outputs/tramadol/causality_output
 
 model:
   model_version: albert-base-v2

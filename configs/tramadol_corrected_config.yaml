@@ -1,10 +1,10 @@
 data:
-  train_path: data/TramadolCorrected/processed/train.csv
-  val_path: data/TramadolCorrected/processed/dev.csv
-  test_path: data/TramadolCorrected/processed/test.csv
-  feature_path: data/TramadolCorrected/processed/feature.csv
-  all_path: data/TramadolCorrected/processed/all.csv
-  max_seq_len: 256
+  train_path: /work3/s204138/InferBERT_data/TramadolMortalities_corrected/processed/train.csv
+  val_path: /work3/s204138/InferBERT_data/TramadolMortalities_corrected/processed/dev.csv
+  test_path: /work3/s204138/InferBERT_data/TramadolMortalities_corrected/processed/test.csv
+  feature_path: /work3/s204138/InferBERT_data/TramadolMortalities_corrected/processed/feature.csv
+  all_path: /work3/s204138/InferBERT_data/TramadolMortalities_corrected/processed/all.csv
+  max_seq_len: 128
   is_lowercase: False # albert-base-v2 is uncased
   pos_weight: 1 # Vector with dimension equal to n_classes that accounts for class imbalances --> vector containing (n_negative / n_positive)
 
@@ -22,14 +22,14 @@ training:
   accum_iters: 1 # gradients are accumulated for mini_batch_size * accum_iters before stepping with the optimizer
   use_optimizer: Adam
   print_freq: 75 # print log every x steps
-  total_steps: 20000
+  total_steps: 10000
   warmup_steps: 2000
 
   optimization:
     Adam:
       name: Adam
-      lr: 2.0e-6
-      weight_decay: 0.01
+      lr: 1.0e-5
+      weight_decay: 0.0001
       epsilon: 1.0e-6
       betas:
       - 0.9
@@ -44,30 +44,29 @@ training:
       - 0.9
       - 0.999
   validation:
-    batch_size: 1
+    batch_size: 128
     shuffle: False
 causal_inference:
   prediction:
-    batch_size: 32
+    batch_size: 128
     num_workers: 4
-    input_file_path: data/TramadolCorrected/processed/all.csv
+    input_file_path: data/reproduction/TramadolMortalities_corrected/processed/all.csv
     output_file_path: experiments/reproduction/outputs/tramadol_corrected/probability_file.csv
     uncertainty_est:
       T: 30
   analysis:
     probability_file_path: experiments/reproduction/outputs/tramadol_corrected/probability_file.csv
-    feature_file_path: data/TramadolCorrected/processed/feature.csv
+    feature_file_path: data/reproduction/TramadolMortalities_corrected/processed/feature.csv
     output_dir: experiments/reproduction/outputs/tramadol_corrected/causality_output
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt:
-  use_focal_loss: False
+  pretrained_ckpt: experiments/reproduction/outputs/tramadol_corrected/model_weights.pt
   hidden_size: 768 # hidden dimension, default=768 for base-v2
   intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
   n_attention_heads: 12
   n_memory_blocks: 0
   n_classes: 1 # positive/negative but dim 1 is needed for the loss function
-  fc_dropout_prob: 0.2 # dropout at classification head
+  fc_dropout_prob: 0.0 # dropout at classification head
   attention_dropout_prob: 0.0 # dropout at MHA, default=0.0
   hidden_dropout_prob: 0.0 # dropout at FFN in encoder block, default=0.0

@@ -52,7 +52,8 @@ causal_inference:
     num_workers: 4
     input_file_path: data/TramadolCorrected/processed/all.csv
     output_file_path: experiments/reproduction/outputs/tramadol_corrected/probability_file.csv
-    do_uncertainty_est: False
+    uncertainty_est:
+      T: 30
   analysis:
     probability_file_path: experiments/reproduction/outputs/tramadol_corrected/probability_file.csv
     feature_file_path: data/TramadolCorrected/processed/feature.csv
@@ -60,7 +61,8 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: 
+  pretrained_ckpt:
+  use_focal_loss: False
   hidden_size: 768 # hidden dimension, default=768 for base-v2
   intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2
   n_attention_heads: 12

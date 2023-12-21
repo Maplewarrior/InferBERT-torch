@@ -27,7 +27,7 @@ training:
   optimization:
     Adam:
       name: Adam
-      lr: 1.0e-4
+      lr: 2.0e-6
       weight_decay: 0.0001
       epsilon: 1.0e-6
       betas:
@@ -62,7 +62,7 @@ causal_inference:
 
 model:
   model_version: albert-base-v2
-  pretrained_ckpt: 'experiments/reproduction/outputs/liverfailure/model_weights.pt' # leave blank if training is from scratch
+  pretrained_ckpt: #'experiments/reproduction/outputs/liverfailure/model_weights.pt' # leave blank if training is from scratch
   use_focal_loss: False
   hidden_size: 768 # hidden dimension, default=768 for base-v2
   intermediate_size: 3072 # dimension in FFN of encoder block, default=3072 for base-v2

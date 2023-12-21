@@ -122,7 +122,7 @@ model:
 The pretrained models provided are *no_dropout*, *fc_dropout_02*, *all_dropout_02* for both Analgesics and Tramadol models.
 
 > [!WARNING]
-> Even with a pretrained model, it is no adviced to run on a personal computer as these models tend to eat RAM.
+> Even with a pretrained model, it is not adviced to run on a personal computer as these models tend to eat RAM.
 
 > [!NOTE]
 > To conduct experiments on different model specifications one can modify the config as mentioned above.

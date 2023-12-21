@@ -36,6 +36,9 @@ These methods are inherently limited, however, since they cannot account for int
 The InferBERT model, proposed in [Wang2021InferBERT:Pharmacovigilance](https://www.frontiersin.org/articles/10.3389/frai.2021.659622/full), addresses this shortcoming by pairing a transformer encoder with a post-hoc analysis to assess feature importance tested on two datasets extracted from the FDA Adverse Event Reporting System containing cases of analgesics-induced liver failure and Tramadol fatalities. 
 In this project, we wish to reimplement the methods used in the InferBERT paper using Pytorch and reproduce the results obtained [Wang2021InferBERT:Pharmacovigilance](https://www.frontiersin.org/articles/10.3389/frai.2021.659622/full).
 
+## Weights, data, and logs
+Model weights, losses and accuracies generated in the project can all be found on [Google Drive](https://drive.google.com/drive/folders/1hukR4VGs5tMGPqkCTLy07EA5_S4EiVtr?usp=sharing).
+
 ## Data
 The data used for the Inferbert paper was pulled from FAERS and can be accessed here: [Analgesics-induced Acute Liver Failure](https://drive.google.com/file/d/1VGGs7uxC4UiOIWFZ2LQ6N2cLweMxOSqi/view?usp=sharing) & [Tramadol-related mortalities](https://drive.google.com/file/d/1VIg5vpQhk2FbAwDBwTzyJ18LyxGZ6VII/view?usp=sharing).
 
@@ -94,10 +97,10 @@ python -m pip install -r requirements.txt
 ```
 
 ### Training
-The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. 
+The model is trained using the `utils/trainer.py` script based on configs provided in `configs/liverfailure_config.yaml` and `configs/tramadol_config.yaml`. These configs can be adjusted.  
 
 #### (Optional) Using pretrained weights 
-Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1yePG7mih9w296gjyex6T2O-XkYqVvYmd?usp=drive_link). 
+Since training can be heavy, we have provided the weights for different pretrained models in [this google drive](https://drive.google.com/drive/folders/1hukR4VGs5tMGPqkCTLy07EA5_S4EiVtr?usp=sharing). 
 
 These, can be used by changing the following configs:
 
@@ -130,7 +133,7 @@ python main.py --train --config <config_path>
 ```
 
 ### Causal Analysis
-To generate the causal analysis results run the `utils/causal_inference.py` script:
+To generate the causal analysis results run the `main.py` script with the following flags:
 ```bash
 python main.py --causal_predictions --config <config_path>
 ```
@@ -141,6 +144,5 @@ python main.py --causal_inference --config <config_path>
 ```
 To be able to run this you need to have created the probability_file.csv
 
-### Robustness Evaluation
 
 

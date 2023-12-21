@@ -8,7 +8,7 @@ The project was created by:
 - [s204125 Andreas Fiehn](https://github.com/AndreasLF)
 - [s204138 Michael Harborg](https://github.com/Maplewarrior)
 - [s204139 August Tollerup](https://github.com/4ug-aug)
-- [s200925 Oliver Elmgreen](https://github.com/FenrisWulven)
+- [s204070 Oliver Elmgreen](https://github.com/FenrisWulven)
 
 Under the supervision of [Jes Frellsen](https://orbit.dtu.dk/en/persons/jes-frellsen).
 

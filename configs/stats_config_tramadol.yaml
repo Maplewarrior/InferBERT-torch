@@ -9,7 +9,7 @@ data:
     all_path: 'data/LiverFailure/processed/all.csv'
 
 analysis:
-  dataset_name: liverfailure
+  dataset_name: tramadol
   # tramadol_columns: ['age', 'gender', 'ade', 'indication', 'psd']
   tramadol_columns: ['age', 'gender', 'dose', 'ade', 'indication', 'psd']
   liverfailure_columns: ['age', 'gender', 'dose', 'outcome', 'indication', 'psd']
